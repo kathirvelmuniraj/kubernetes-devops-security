@@ -1,7 +1,11 @@
+## Docker Build and Push Stage
+## replace  siddharth67 with your dockerhub username
+
 pipeline {
   agent any
 
   stages {
+
     stage('Build Artifact - Maven') {
       steps {
         sh "mvn clean package -DskipTests=true"
@@ -20,6 +24,15 @@ pipeline {
         }
       }
     }
+
+    stage('Docker Build and Push') {
+      steps {
+        withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
+          sh 'printenv'
+          sh 'docker build -t devopsdymyr/numeric-app:""$GIT_COMMIT"" .'
+          sh 'docker push devopsdymyr/numeric-app:""$GIT_COMMIT""'
+        }
+      }
+    }
   }
 }
-
