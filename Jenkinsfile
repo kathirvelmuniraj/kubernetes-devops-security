@@ -4,7 +4,7 @@ pipeline {
       deploymentName = "devsecops"
       containerName = "devsecops-container"
       serviceName = "devsecops-svc"
-      imageName = "siddharth67/numeric-app:${GIT_COMMIT}"
+      imageName = "devopsdymyr/numeric-app:${GIT_COMMIT}"
       applicationURL = "http://devsecopsevs.eastus.cloudapp.azure.com/"
       applicationURI = "/increment/99"
     }
@@ -71,7 +71,10 @@ pipeline {
     stage('Vulnerability Scan - Kubernetes') {
       steps {
         sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
-      }
+      },
+          "Kubesec Scan": {
+            sh "bash kubesec-scan.sh"
+          }
     }
 
     stage('K8S Deployment - DEV') {
